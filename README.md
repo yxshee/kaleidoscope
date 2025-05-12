@@ -2,10 +2,6 @@
 
 This project is an interactive kaleidoscope created using p5.js. Users can draw on a canvas with various shapes and settings, and their strokes are mirrored across multiple segments to create beautiful, symmetrical patterns. The number of segments, colors, brush styles, and effects can be adjusted dynamically through a user-friendly interface.
 
-## Live Demo
-
-*(Optional: Add a link to a live demo if you deploy it, e.g., using GitHub Pages)*
-[Link to Live Demo](#) *(Replace with actual link)*
 
 ## Preview
 
