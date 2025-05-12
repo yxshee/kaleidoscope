@@ -1,13 +1,10 @@
+
+<img width="588" alt="image" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
+
 # Advanced Kaleidoscope
 
 This project is an interactive kaleidoscope created using p5.js. Users can draw on a canvas with various shapes and settings, and their strokes are mirrored across multiple segments to create beautiful, symmetrical patterns. The number of segments, colors, brush styles, and effects can be adjusted dynamically through a user-friendly interface.
 
-
-## Preview
-
-![Kaleidoscope Preview](docs/kaleidoscope_preview.gif)
-
-<img width="588" alt="image" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
 
 ## Features
 
