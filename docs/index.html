@@ -3,11 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced p5.js Kaleidoscope</title>
+    <title>Enhanced Interactive p5.js Kaleidoscope</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; /* Slightly adjusted page background */
+            font-family: 'Roboto', sans-serif; /* Base font */
+            color: #333;
+            padding: 20px 0; /* Add padding top and bottom */
+        }
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em; /* Larger title */
+            color: #2c3e50; /* Dark blue-grey */
+            text-align: center;
+            margin-bottom: 25px; /* Increased margin */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        #canvas-container {
+            margin-bottom: 25px; /* Increased margin */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Softer, larger shadow */
+            border-radius: 10px; 
+            overflow: hidden; 
+        }
+        canvas {
+            display: block; 
+            border: 2px solid #4a4a4a; /* Slightly darker border */
+            border-radius: 10px; 
+        }
+        .controls-grid {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 25px; 
+            justify-content: center; 
+            max-width: 850px; 
+            width: 90%; 
+        }
+        fieldset {
+            border: 1px solid #d1d1d1; /* Lighter border */
+            border-radius: 10px; /* More rounded */
+            padding: 20px 25px; 
+            background-color: #ffffff; /* White background for fieldsets */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            flex: 1 1 260px; 
+            min-width: 240px; 
+        }
+        fieldset legend {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            color: #007bff;
+            padding: 0 12px; 
+            font-size: 1.15em; /* Slightly larger legend */
+        }
+        fieldset div {
+            margin-bottom: 15px; 
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 6px; 
+        }
+        fieldset div.inline-label { 
+            flex-direction: row;
+            align-items: center;
+            gap: 8px; /* Gap for checkbox and label */
+        }
+        fieldset label {
+            font-size: 0.98em; 
+            color: #555; /* Darker grey for labels */
+        }
+        input[type="range"], select, button {
+            width: 100%; 
+            padding: 10px; /* More padding */
+            border-radius: 5px; /* Slightly more rounded */
+            border: 1px solid #ccc;
+            box-sizing: border-box; 
+            font-size: 0.95em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="range"]:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+        input[type="checkbox"] {
+            width: auto; 
+            margin-right: 5px; /* Space after checkbox */
+            transform: scale(1.1); /* Slightly larger checkbox */
+        }
+        button {
+            color: white;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            border: none; 
+            font-size: 1em; 
+            font-weight: 500; /* Medium font weight for buttons */
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px); /* Slight lift on hover */
+        }
+        button:active {
+            transform: translateY(0px); /* Press down effect */
+        }
+        #saveImageButton {
+            background-color: #28a745; 
+        }
+        #saveImageButton:hover {
+            background-color: #1e7e34;
+        }
+        .info-text {
+            margin-top: 0; /* Removed top margin as title is there */
+            margin-bottom: 20px; /* Space below instructions */
+            font-size: 1em;
+            color: #555;
+            text-align: center;
+        }
+        .slider-value {
+            font-weight: bold;
+            color: #007bff;
+            margin-left: 5px; /* Space before value */
+        }
+    </style>
 </head>
 <body>
+    <h1 class="main-title">Kaleidoscope</h1>
     <p class="info-text">Create mesmerizing patterns! Click & drag on the canvas. Adjust controls below.</p>
     <div id="canvas-container"></div>
 
@@ -41,7 +168,7 @@
                 <input type="range" id="brightnessSlider" min="0" max="100" value="90">
             </div>
             <div>
-                <label for="alphaSlider">Opacity: <span id="alphaValue" class="slider-value">70</span></label>
+                <label for="alphaSlider">Shape Opacity: <span id="alphaValue" class="slider-value">70</span></label>
                 <input type="range" id="alphaSlider" min="0" max="100" value="70">
             </div>
         </fieldset>
@@ -56,11 +183,240 @@
                 <input type="checkbox" id="trailEffectCheckbox">
                 <label for="trailEffectCheckbox">Trail Effect</label>
             </div>
+            <div>
+                <label for="trailFadeSlider">Trail Fade Speed: <span id="trailFadeValue" class="slider-value">15</span></label>
+                <input type="range" id="trailFadeSlider" min="0" max="100" value="15" disabled> </div>
             <button id="clearButton">Clear Canvas</button>
             <button id="saveImageButton">Save Image</button>
         </fieldset>
     </div>
 
-    <script src="sketch.js"></script>
+    <script>
+        // --- Global Variables ---
+        let symmetry = 6;
+        let angle;
+        let canvas;
+
+        // Drawing Style
+        let drawingMode = 'line';
+        let currentBrushSize = 10;
+
+        // Color
+        let hueValue = 0;
+        let saturationValue = 90;
+        let brightnessValue = 90;
+        let alphaValue = 70; // Opacity for the drawing shapes
+
+        // Effects
+        let trailEffectActive = false;
+        let trailFadeAlpha = 15; // Alpha for the background redraw when trail is active
+
+        // --- P5.js Setup Function ---
+        function setup() {
+            canvas = createCanvas(600, 600);
+            canvas.parent('canvas-container');
+
+            angleMode(DEGREES);
+            colorMode(HSB, 360, 100, 100, 100); 
+            background(10, 5, 95); // Initial light background: HSB(hue, sat, brightness)
+            updateSymmetry(symmetry);
+
+            // --- UI Element Setup & Event Handlers ---
+            select('#drawingModeSelect').changed(function() { drawingMode = this.value(); });
+            
+            select('#brushSizeSlider').input(function() {
+                currentBrushSize = parseInt(this.value()); // Ensure it's a number
+                select('#brushSizeValue').html(currentBrushSize);
+            });
+            select('#brushSizeValue').html(currentBrushSize); 
+
+            select('#saturationSlider').input(function() {
+                saturationValue = parseInt(this.value());
+                select('#saturationValue').html(saturationValue);
+            });
+            select('#saturationValue').html(saturationValue);
+
+            select('#brightnessSlider').input(function() {
+                brightnessValue = parseInt(this.value());
+                select('#brightnessValue').html(brightnessValue);
+            });
+            select('#brightnessValue').html(brightnessValue);
+            
+            select('#alphaSlider').input(function() { // Controls shape opacity
+                alphaValue = parseInt(this.value());
+                select('#alphaValue').html(alphaValue);
+            });
+            select('#alphaValue').html(alphaValue);
+
+            select('#symmetrySlider').input(function() {
+                updateSymmetry(parseInt(this.value()));
+            });
+            select('#symmetryDisplayValue').html(symmetry);
+
+            const trailFadeSlider = select('#trailFadeSlider');
+            trailFadeSlider.input(function() {
+                trailFadeAlpha = parseInt(this.value());
+                select('#trailFadeValue').html(trailFadeAlpha);
+            });
+            select('#trailFadeValue').html(trailFadeAlpha); // Initial display
+
+            select('#trailEffectCheckbox').changed(function() {
+                trailEffectActive = this.checked();
+                if (trailEffectActive) {
+                    trailFadeSlider.removeAttribute('disabled');
+                } else {
+                    trailFadeSlider.attribute('disabled', '');
+                    clearDrawing(); // Clear to solid background if trail is turned off
+                }
+            });
+
+            select('#clearButton').mousePressed(clearDrawing);
+            select('#saveImageButton').mousePressed(saveKaleidoscopeImage);
+        }
+
+        // --- Update Symmetry ---
+        function updateSymmetry(newSymmetry) {
+            symmetry = newSymmetry;
+            angle = 360 / symmetry;
+            select('#symmetryDisplayValue').html(symmetry);
+            clearDrawing(); 
+        }
+
+        // --- Clear Drawing Area ---
+        function clearDrawing() {
+            background(10, 5, 95); // HSB: very low saturation, high brightness (light grey)
+        }
+
+        // --- Save Canvas Image ---
+        function saveKaleidoscopeImage() {
+            saveCanvas(canvas, 'kaleidoscope_art', 'png');
+        }
+        
+        // --- Draw Star Shape ---
+        function drawStar(x, y, radius1, radius2, npoints) {
+            let angleOffset = 360 / npoints;
+            let halfAngleOffset = angleOffset / 2.0;
+            beginShape();
+            for (let a = 0; a < 360; a += angleOffset) {
+                let sx = x + cos(a) * radius2;
+                let sy = y + sin(a) * radius2;
+                vertex(sx, sy);
+                sx = x + cos(a + halfAngleOffset) * radius1;
+                sy = y + sin(a + halfAngleOffset) * radius1;
+                vertex(sx, sy);
+            }
+            endShape(CLOSE);
+        }
+
+        // --- P5.js Draw Loop ---
+        function draw() {
+            if (trailEffectActive) {
+                // HSB background with controlled alpha for trail effect
+                // Alpha for HSB background is 0-100
+                background(10, 5, 95, trailFadeAlpha); 
+            } else if (frameCount === 1 && !trailEffectActive) { 
+                // Ensure solid background if trail is off from the start
+                clearDrawing();
+            }
+
+
+            translate(width / 2, height / 2);
+
+            if (mouseIsPressed && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+                let mx = mouseX - width / 2;
+                let my = mouseY - height / 2;
+                let pmx = pmouseX - width / 2;
+                let pmy = pmouseY - height / 2;
+
+                hueValue = (hueValue + 0.7) % 360;
+                
+                // Set stroke and fill for the shapes being drawn
+                // alphaValue here is for the shape itself
+                stroke(hueValue, saturationValue, brightnessValue, alphaValue); 
+                fill(hueValue, saturationValue, brightnessValue, alphaValue * 0.8); // Fill slightly more transparent
+                
+                // The actual drawing part, refactored into a function
+                drawSymmetricalShapes(mx, my, pmx, pmy);
+            }
+        }
+
+        function drawSymmetricalShapes(mx, my, pmx, pmy) {
+            // This function encapsulates the drawing of one shape and its reflections
+            for (let i = 0; i < symmetry; i++) {
+                rotate(angle);
+                drawCurrentShape(mx, my, pmx, pmy); // Draw the primary shape
+                
+                push();
+                scale(1, -1); // Flip for reflection
+                drawCurrentShape(mx, my, pmx, pmy); // Draw the reflected shape
+                pop();
+            }
+        }
+
+        function drawCurrentShape(mx, my, pmx, pmy) {
+            // This function draws a single instance of the selected shape
+            // It uses global currentBrushSize, drawingMode, etc.
+            push(); // Isolate transformations for the shape itself
+            
+            let R = currentBrushSize * 1.5; 
+
+            // Apply stroke weight based on drawing mode (lines vs filled shapes)
+            if (drawingMode === 'line') {
+                strokeWeight(currentBrushSize);
+                noFill();
+            } else {
+                strokeWeight(max(1, currentBrushSize / 5)); // Thinner stroke for filled shapes, or noStroke()
+                // For filled shapes, ensure fill is set before drawing
+                fill(hueValue, saturationValue, brightnessValue, alphaValue * 0.8);
+                // if you want no stroke on filled shapes: noStroke();
+            }
+
+            switch (drawingMode) {
+                case 'line':
+                    line(mx, my, pmx, pmy);
+                    break;
+                case 'circle':
+                    ellipse(mx, my, R * 2, R * 2);
+                    break;
+                case 'triangle':
+                    let r = R * 1.2; // Adjusted size for triangle
+                    triangle(
+                        mx, my - r,
+                        mx - r * cos(30), my + r * sin(30),
+                        mx + r * cos(30), my + r * sin(30)
+                    );
+                    break;
+                case 'star':
+                    // Star(x, y, innerRadius, outerRadius, npoints)
+                    drawStar(mx, my, R * 0.7, R * 1.4, 5); // Adjusted radii for better star shape
+                    break;
+                case 'randomShape':
+                    beginShape();
+                    let numVertices = floor(random(3, 8)); // 3 to 7 vertices
+                    for (let j = 0; j < numVertices; j++) {
+                        let angleR = random(360);
+                        let radiusR = random(R * 0.4, R * 1.3); // Adjusted random radius
+                        vertex(mx + cos(angleR) * radiusR, my + sin(angleR) * radiusR);
+                    }
+                    endShape(CLOSE);
+                    break;
+            }
+            pop(); // Restore from shape-specific transformations
+        }
+
+
+        // Prevent default browser behavior for touch events on canvas
+        function touchStarted(event) {
+          if (event.target === canvas.elt) { 
+            return false; 
+          }
+        }
+
+        function touchMoved(event) {
+          if (event.target === canvas.elt) {
+            return false;
+          }
+        }
+    </script>
 </body>
 </html>
