@@ -5,44 +5,99 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    background-color: #e9e9e9; /* Lighter background for the page */
+    font-family: 'Arial', sans-serif;
     color: #333;
+    padding-bottom: 20px; /* Space for controls if page is short */
+}
+#canvas-container {
+    margin-bottom: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* More prominent shadow */
+    border-radius: 8px; /* Rounded corners for the container if needed */
+    overflow: hidden; /* Ensures canvas border-radius is respected */
 }
 canvas {
-    border: 2px solid #333;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: block; /* Removes extra space below canvas */
+    border: 2px solid #555; /* Darker border for canvas */
+    border-radius: 8px; /* Rounded corners for the canvas itself */
 }
-.controls {
-    margin-top: 20px;
+.controls-grid {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+    gap: 20px; /* Increased gap */
+    margin-top: 20px;
+    justify-content: center; /* Center the fieldsets */
+    max-width: 800px; /* Max width for the control area */
+    width: 95%; /* Responsive width */
+}
+fieldset {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px 20px; /* More padding */
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    flex: 1 1 250px; /* Flex properties for responsive fieldsets */
+    min-width: 220px; /* Minimum width before wrapping */
+}
+fieldset legend {
+    font-weight: bold;
+    color: #007bff;
+    padding: 0 10px; /* More padding for legend */
+    font-size: 1.1em;
+}
+fieldset div {
+    margin-bottom: 12px; /* Slightly more margin */
+    display: flex;
+    flex-direction: column; /* Stack label and input vertically */
+    align-items: flex-start; /* Align items to the start */
+    gap: 5px; /* Gap between label and input */
+}
+fieldset div.inline-label { /* For checkbox where label is beside */
+    flex-direction: row;
     align-items: center;
 }
+fieldset label {
+    font-size: 0.95em; /* Slightly smaller label */
+    color: #444;
+}
+input[type="range"], select, button {
+    width: 100%; /* Make inputs take full width of their container */
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    font-size: 0.9em;
+}
+input[type="checkbox"] {
+    width: auto; /* Checkbox default width */
+}
 button {
-    padding: 10px 15px;
-    font-size: 16px;
     color: white;
     background-color: #007bff;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    border: none; /* Remove default border */
+    font-size: 1em; /* Reset font size for buttons */
+    margin-top: 5px; /* Add some margin for buttons within fieldset divs */
 }
 button:hover {
     background-color: #0056b3;
 }
-label {
-    font-size: 16px;
+#saveImageButton {
+    background-color: #28a745; /* Green for save */
 }
-input[type="range"] {
-    cursor: pointer;
+#saveImageButton:hover {
+    background-color: #1e7e34;
 }
 .info-text {
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 25px;
+    font-size: 1em;
     color: #555;
     text-align: center;
-    max-width: 600px; /* Ensure it doesn't get too wide */
+    margin-bottom: 15px; /* Added margin below info text */
+}
+/* Span for slider values */
+.slider-value {
+    font-weight: bold;
+    color: #007bff;
 }
