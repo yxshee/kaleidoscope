@@ -1,6 +1,10 @@
 <p align="center">
-  <img width="588" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
+  <img width="588" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/785d0300-d7fc-4535-b3e7-c758239ae3cc" />
 </p>
+
+
+
+
 
 <h1 align="center">🎨 Advanced p5.js Kaleidoscope 🎨</h1>
 
