@@ -1,41 +1,65 @@
+<p align="center">
+  <img width="588" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
+</p>
 
-<img width="588" alt="image" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
+<h1 align="center">🎨 Advanced p5.js Kaleidoscope 🎨</h1>
 
-# Advanced Kaleidoscope
+<p align="center">
+  An interactive kaleidoscope created using p5.js. Draw with various shapes and settings, mirrored across multiple segments to create beautiful, symmetrical patterns. Dynamically adjust symmetry, colors, brush styles, and effects through a user-friendly interface.
+</p>
 
-This project is an interactive kaleidoscope created using p5.js. Users can draw on a canvas with various shapes and settings, and their strokes are mirrored across multiple segments to create beautiful, symmetrical patterns. The number of segments, colors, brush styles, and effects can be adjusted dynamically through a user-friendly interface.
+<p align="center">
+  <a href="#features">✨ Features</a> •
+  <a href="#how-to-run-locally">🚀 How to Run</a> •
+  <a href="#controls-interface">🛠️ Controls</a> •
+  <a href="#file-structure">📂 File Structure</a> •
+  <a href="#technologies-used">💻 Technologies</a> •
+  <a href="#license">📜 License</a> •
+  <a href="#contributing">🤝 Contributing</a>
+</p>
 
+<!-- Optional: Live Demo Badge -->
+<!-- 
+<p align="center">
+  <a href="YOUR_LIVE_DEMO_URL_HERE">
+    <img src="https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=netlify" alt="Live Demo"/>
+  </a>
+</p>
+-->
 
-## Features
+---
 
-*   **Interactive Drawing**: Click and drag your mouse on the canvas to draw.
-*   **Multiple Drawing Modes**:
+## ✨ Features
+
+*   **✍️ Interactive Drawing**: Click and drag your mouse on the canvas to draw.
+*   **🎨 Multiple Drawing Modes**:
     *   **Line**: Classic line drawing.
-    *   **Circle**: Draws filled circles at the mouse position.
+    *   **Circle**: Draws filled circles.
     *   **Triangle**: Draws filled equilateral triangles.
     *   **Star**: Draws 5-pointed stars.
-    *   **Random Polygon**: Draws small polygons with a random number of vertices (3-6).
-*   **Adjustable Brush Size**: Control the thickness/size of the selected shape or line.
-*   **Adjustable Symmetry**: Use a slider to change the number of symmetrical segments (from 2 to 24).
-*   **Dynamic Color Control**:
-    *   **Hue**: Cycles automatically as you draw, creating a rainbow effect.
-    *   **Saturation**: Slider to control the intensity of the color (0-100).
-    *   **Brightness**: Slider to control the lightness/darkness of the color (0-100).
-    *   **Opacity (Alpha)**: Slider to control the transparency of the drawing (0-100).
-*   **Trail Effect**: Toggle a visual trail effect where previous drawings fade slowly, creating layered patterns.
-*   **Clear Canvas**: A button to erase the current drawing and start fresh.
-*   **Save Image**: Download the current canvas artwork as a PNG file named `kaleidoscope_art.png`.
-*   **Responsive Control Layout**: Controls are organized in fieldsets and adapt to different screen sizes.
-*   **Touch Friendly**: Designed to work on touch devices, preventing default browser scroll/zoom actions on the canvas for a smoother drawing experience.
+    *   **Random Polygon**: Draws small polygons with 3-6 vertices.
+*   **🖌️ Adjustable Brush Size**: Control the thickness/size of the drawing tool.
+*   **🔄 Adjustable Symmetry**: Slider to change symmetrical segments (2 to 24).
+*   **🌈 Dynamic Color Control**:
+    *   **Hue**: Cycles automatically for a rainbow effect.
+    *   **Saturation**: Slider to control color intensity (0-100).
+    *   **Brightness**: Slider to control color lightness/darkness (0-100).
+    *   **Opacity (Alpha)**: Slider for drawing transparency (0-100).
+*   **🌫️ Trail Effect**: Toggle a visual trail where drawings fade slowly.
+*   **🗑️ Clear Canvas**: Button to erase the drawing.
+*   **💾 Save Image**: Download artwork as a PNG (`kaleidoscope_art.png`).
+*   **📱 Responsive Controls**: Layout adapts to screen sizes.
+*   **👆 Touch Friendly**: Smooth experience on touch devices.
 
-## How to Run Locally
+---
+
+## 🚀 How to Run Locally
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/kaleidoscope.git
+    git clone https://github.com/your-username/kaleidoscope.git # Replace your-username
     cd kaleidoscope
     ```
-    *(Replace `your-username` with your actual GitHub username if applicable)*
 
 2.  **Navigate to the `code` directory:**
     ```bash
@@ -43,76 +67,104 @@ This project is an interactive kaleidoscope created using p5.js. Users can draw 
     ```
 
 3.  **Open `main.html` in your browser:**
-    *   You can usually just double-click the `main.html` file.
-    *   Alternatively, if you have a local web server (e.g., Python's built-in server, Node.js `http-server`):
+    *   Double-click `main.html`.
+    *   Or, use a local web server (e.g., Python's):
         ```bash
         # Using Python 3
         python -m http.server
         ```
-        Then open `http://localhost:8000/main.html` (or the port shown) in your web browser.
+        Then open `http://localhost:8000/main.html` in your browser.
 
-## Controls Interface
+---
 
-The controls are located below the canvas and are grouped into logical sections:
+## 🛠️ Controls Interface
+
+The controls are located below the canvas, grouped into logical sections:
 
 ### 1. Drawing Style
-   *   **Shape**: A dropdown menu to select the drawing tool.
-       *   Options: `Line`, `Circle`, `Triangle`, `Star`, `Random Polygon`.
-   *   **Brush Size**: A slider to adjust the size or thickness of the drawing tool. The current value is displayed.
+   *   **Shape**: Dropdown (`Line`, `Circle`, `Triangle`, `Star`, `Random Polygon`).
+   *   **Brush Size**: Slider to adjust tool size.
 
 ### 2. Color Palette
-   *   **Saturation**: A slider to control the saturation of the colors. The current value is displayed.
-   *   **Brightness**: A slider to control the brightness of the colors. The current value is displayed.
-   *   **Opacity**: A slider to control the transparency of the strokes. The current value is displayed.
+   *   **Saturation**: Slider for color intensity.
+   *   **Brightness**: Slider for color lightness.
+   *   **Opacity**: Slider for stroke transparency.
 
 ### 3. Canvas & Effects
-   *   **Symmetry Segments**: A slider to change the number of symmetrical segments in the kaleidoscope. The current value is displayed.
-   *   **Trail Effect**: A checkbox to toggle the trail effect. When enabled, previous strokes fade out slowly.
-   *   **Clear Canvas Button**: Clears the drawing area to a fresh background.
-   *   **Save Image Button**: Saves the current state of the canvas as a PNG image.
+   *   **Symmetry Segments**: Slider for segment count.
+   *   **Trail Effect**: Checkbox to toggle.
+   *   **Clear Canvas Button**: Erases the drawing.
+   *   **Save Image Button**: Downloads canvas as PNG.
 
-## File Structure
+---
+
+## 📂 File Structure
 
 ```
 kaleidoscope/
 ├── code/
 │   ├── main.html       # Main HTML file (structure, UI controls)
-│   ├── style.css       # CSS styles for layout and appearance
-│   └── sketch.js       # p5.js sketch (JavaScript for drawing logic and interactivity)
+│   ├── style.css       # CSS styles
+│   └── sketch.js       # p5.js sketch (JavaScript logic)
+├── docs/
+│   └── kaleidoscope_preview.gif # Example preview image (replace with your own)
+├── .gitignore          # Specifies intentionally untracked files
 ├── LICENSE             # CC0 1.0 Universal License file
-├── README.md           # This file (project overview, setup, usage)
-└── docs/               # Documentation assets (images, GIFs)
-    └── kaleidoscope_preview.gif  # Example preview image
+└── README.md           # This file
 ```
+*Note: The `kaleidoscope_preview.gif` in `docs/` is a placeholder. You should replace it with your actual preview image/gif.*
 
-## Technologies Used
+---
 
-*   **HTML5**: For the basic structure and UI elements.
-*   **CSS3**: For styling the page and controls.
-*   **JavaScript (ES6+)**: For the application logic and interactivity.
-*   **p5.js (v1.9.0)**: A JavaScript library for creative coding, used for canvas manipulation, drawing, and handling user input.
+## 💻 Technologies Used
 
-## License
+<p align="left">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/p5.js-ED225D?style=for-the-badge&logo=p5dotjs&logoColor=white" alt="p5.js"/>
+</p>
 
-This project is released under the [CC0 1.0 Universal (CC0 1.0) Public Domain Dedication](LICENSE). This means it is free to use, modify, and distribute, even for commercial purposes, without any restrictions.
+---
 
-## Future Enhancements (Ideas)
+## 📜 License
 
-*   **Advanced Color Palettes**: Predefined palettes, color pickers for base hue.
-*   **More Brush Options**: Different textures, calligraphy styles.
-*   **Animation**: Auto-drawing modes, evolving patterns over time.
-*   **Sound Reactivity**: Visuals change based on microphone input or an uploaded audio file.
-*   **Undo/Redo Functionality**: Step back or forward in the drawing process.
-*   **Saving/Loading Configurations**: Allow users to save their favorite control settings.
-*   **Background Options**: Ability to change background color or use an image.
-*   **Performance Optimization**: For very complex drawings or higher segment counts.
+This project is released under the **CC0 1.0 Universal (CC0 1.0) Public Domain Dedication**.
 
-## Contributing
+<p align="left">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg?style=for-the-badge" alt="License: CC0 1.0"/>
+  </a>
+</p>
 
-Contributions are welcome! Feel free to submit pull requests with bug fixes, new features, or improvements to the documentation.
+This means it is free to use, modify, and distribute, even for commercial purposes, without any restrictions. See the [LICENSE](LICENSE) file for more details.
 
-1.  Fork the repository.
-2.  Create a new branch for your feature or bug fix.
-3.  Make your changes and commit them with descriptive commit messages.
-4.  Push your changes to your fork.
-5.  Submit a pull request.
+---
+
+## 💡 Future Enhancements (Ideas)
+
+*   Advanced Color Palettes (predefined, color pickers)
+*   More Brush Options (textures, calligraphy)
+*   Animation (auto-draw, evolving patterns)
+*   Sound Reactivity (visuals change with audio input)
+*   Undo/Redo Functionality
+*   Saving/Loading Configurations
+*   Background Options (color change, image upload)
+*   Performance Optimization
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to submit pull requests with bug fixes, new features, or improvements.
+
+1.  **Fork** the repository.
+2.  Create a **new branch** (`git checkout -b feature/YourFeature`).
+3.  Make your **changes**.
+4.  **Commit** your changes (`git commit -m 'Add some feature'`).
+5.  **Push** to the branch (`git push origin feature/YourFeature`).
+6.  Open a **Pull Request**.
+
+---
+
+<p align="center">Made with ❤️ and p5.js</p>
