@@ -174,14 +174,17 @@ Contributions are welcome! Feel free to submit pull requests with bug fixes, new
 <p align="center">Made with ❤️ and p5.js</p>
 
 <p align="center">
-  <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/d3fbae74-644b-47b6-bb46-c5fbb2076be0" />
+  <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/94067d96-f1ff-43e4-b3f5-14bfa51b8c04" />
 
 
   <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/534a8158-054a-493d-899b-763b427b0e27" />
 
   <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/f021c42f-c1c1-4113-b6c7-69b6068b554d" />
 
-  <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/46eb09cb-ec2f-42e7-9987-a2016b02db70" />
+  <img width="24%" alt="Kaleidoscope Preview" src="https://github.com/user-attachments/assets/59699315-cd12-4ae1-ac36-fba05e7af943" />
 </p>
+
+
+
 
 
