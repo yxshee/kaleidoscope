@@ -10,7 +10,8 @@ This project is an interactive kaleidoscope created using p5.js. Users can draw 
 ## Preview
 
 ![Kaleidoscope Preview](docs/kaleidoscope_preview.gif)
-*(Suggestion: Replace `docs/kaleidoscope_preview.gif` with an actual screenshot or animated GIF of your kaleidoscope in action. You can record a short GIF using tools like LICEcap (Windows/macOS), ScreenToGif (Windows), or Kap (macOS). For a static image, a screenshot of a complex pattern would be great. Place the image in a `docs` folder in your repository.)*
+
+<img width="588" alt="image" src="https://github.com/user-attachments/assets/e964acf5-c53d-42c0-86a8-14ab37e30ccd" />
 
 ## Features
 
