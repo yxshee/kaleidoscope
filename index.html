@@ -3,22 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aesthetic Interactive p5.js Kaleidoscope</title>
+    <title>Enhanced Aesthetic p5.js Kaleidoscope</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f4f7f6; 
-            --text-color: #333; 
-            --primary-accent: #007bff; 
-            --secondary-accent: #6c757d; 
-            --border-color: #d1d1d1; 
-            --input-bg: #fff; 
-            --card-bg: #fff; 
-            --shadow-color: rgba(0,0,0,0.08); 
-            --title-font: 'Verdana', serif; 
+            /* Light Theme UI Variables (Default) */
+            --ui-bg-color: #f4f7f6;
+            --ui-text-color: #333;
+            --ui-card-bg: #fff;
+            --ui-border-color: #d1d1d1;
+            --ui-input-bg: #fff;
+            --ui-shadow-color: rgba(0,0,0,0.08);
+            --primary-accent: #007bff;
+            --secondary-accent: #6c757d;
+            --title-color: #2c3e50;
+            --title-font: 'Verdana', serif;
             --body-font: 'Roboto', sans-serif;
         }
+
+        body.ui-dark-theme {
+            /* Dark Theme UI Variables */
+            --ui-bg-color: #2c3e50; /* Dark background */
+            --ui-text-color: #e1e1e1; /* Light text */
+            --ui-card-bg: #34495e; /* Darker card background */
+            --ui-border-color: #566573; /* Darker border */
+            --ui-input-bg: #566573; /* Darker input background */
+            --ui-shadow-color: rgba(0,0,0,0.3); /* Stronger shadow */
+            --primary-accent: #3498db; /* Lighter blue accent */
+            --secondary-accent: #95a5a6; /* Lighter grey accent */
+            --title-color: #ecf0f1; /* Light title color */
+        }
+        /* Apply transitions for smooth theme changes */
+        body, fieldset, input, select, button, .toggle-switch button {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
 
         body {
             display: flex;
@@ -26,176 +47,256 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: var(--bg-color);
+            background-color: var(--ui-bg-color); /* Use UI variable */
             font-family: var(--body-font);
-            color: var(--text-color);
-            padding: 20px 10px; 
+            color: var(--ui-text-color); /* Use UI variable */
+            padding: 20px 10px;
             box-sizing: border-box;
         }
 
-        .main-title {
-            font-family: var(--title-font);
-            font-size: clamp(2.5em, 5vw, 3.8em); 
-            color: #2c3e50; 
-            text-align: center;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 900px; /* Align with controls */
             margin-bottom: 20px;
-            letter-spacing: 1px; 
+            padding: 0 10px; /* Padding for spacing */
+            box-sizing: border-box;
         }
 
+
+        .main-title {
+            font-family: var(--title-font);
+            font-size: clamp(2.2em, 4vw, 3.2em);
+            color: var(--title-color); /* Use UI variable */
+            text-align: center;
+            letter-spacing: 1px;
+            margin: 0; /* Remove default margin */
+            flex-grow: 1; /* Allow title to take space */
+            text-align: center; /* Center title text */
+        }
+
+        .ui-theme-toggle-container {
+           display: flex;
+           align-items: center;
+           gap: 8px;
+           /* Positioned via header flexbox */
+        }
+        .ui-theme-toggle-container label {
+             font-size: 0.9em;
+             color: var(--secondary-accent);
+        }
+
+        /* Simple toggle switch styling */
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 50px; /* Width of the switch */
+          height: 26px; /* Height of the switch */
+        }
+        .switch input { display:none; } /* Hide default checkbox */
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 26px; /* Rounded switch */
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 18px; /* Size of the knob */
+          width: 18px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%; /* Circular knob */
+        }
+        input:checked + .slider {
+          background-color: var(--primary-accent); /* Color when ON */
+        }
+        input:checked + .slider:before {
+          transform: translateX(24px); /* Move knob to the right */
+        }
+
+
         .info-text {
-            font-size: clamp(0.9em, 2vw, 1em); 
+            font-size: clamp(0.9em, 2vw, 1em);
             color: var(--secondary-accent);
             text-align: center;
             margin-bottom: 25px;
-            max-width: 600px; 
+            max-width: 600px;
         }
 
         #canvas-container {
-            margin-bottom: 15px; /* Reduced margin to bring actions bar closer */
-            box-shadow: 0 8px 25px var(--shadow-color); 
-            border-radius: 12px; 
-            overflow: hidden; 
-            background-color: #fff; 
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px var(--ui-shadow-color); /* Use UI variable */
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: var(--ui-card-bg); /* Use UI variable */
         }
 
         canvas {
-            display: block; 
-            border-radius: 10px; 
+            display: block;
+            border-radius: 10px;
         }
 
         .canvas-actions-bar {
             display: flex;
             justify-content: center;
-            gap: 15px; /* Space between buttons */
-            margin-bottom: 25px; /* Space before the main controls grid */
+            gap: 15px;
+            margin-bottom: 25px;
             width: 100%;
-            max-width: 600px; /* Align with canvas width or info text */
+            max-width: 600px;
         }
         .canvas-actions-bar .control-button {
-            flex-grow: 1; /* Allow buttons to grow if space allows */
-            max-width: 200px; /* Max width for each button */
+            flex-grow: 1;
+            max-width: 200px;
         }
 
 
         .controls-grid {
             display: flex;
-            flex-wrap: wrap; 
-            gap: 20px; 
-            justify-content: center; 
-            max-width: 900px; 
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 900px;
             width: 100%;
         }
 
         fieldset {
-            border: 1px solid var(--border-color);
-            border-radius: 12px; 
-            padding: 20px 25px; 
-            background-color: var(--card-bg);
-            box-shadow: 0 5px 15px var(--shadow-color); 
-            flex: 1 1 280px; 
+            border: 1px solid var(--ui-border-color); /* Use UI variable */
+            border-radius: 12px;
+            padding: 20px 25px;
+            background-color: var(--ui-card-bg); /* Use UI variable */
+            box-shadow: 0 5px 15px var(--ui-shadow-color); /* Use UI variable */
+            flex: 1 1 280px;
             min-width: 260px;
-            transition: box-shadow 0.3s ease; 
+            transition: box-shadow 0.3s ease;
         }
         fieldset:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* Slightly stronger hover shadow */
         }
 
         fieldset legend {
             font-family: var(--body-font);
-            font-weight: 500; 
+            font-weight: 500;
             color: var(--primary-accent);
             padding: 0 10px;
-            font-size: 1.2em; 
-            margin-left: 5px; 
+            font-size: 1.2em;
+            margin-left: 5px;
         }
 
         fieldset div {
-            margin-bottom: 18px; 
+            margin-bottom: 18px;
             display: flex;
-            flex-direction: column; 
-            gap: 8px; 
+            flex-direction: column;
+            gap: 8px;
         }
 
-        fieldset div.inline-control { 
+        fieldset div.inline-control {
             flex-direction: row;
             align-items: center;
-            /* justify-content: space-between;  Removed for better checkbox alignment */
         }
-         fieldset div.inline-control label { /* Label for checkbox */
-            margin-right: auto; /* Pushes checkbox to the right if needed, or just use gap */
-            order: 1; /* Label first */
+         fieldset div.inline-control label {
+            margin-right: auto;
+            order: 1;
         }
         fieldset div.inline-control input[type="checkbox"] {
-            order: 2; /* Checkbox second */
-            margin-left: 10px; /* Space between label and checkbox */
+            order: 2;
+            margin-left: 10px;
         }
 
 
         fieldset label {
             font-size: 0.95em;
-            color: #555; 
-            font-weight: 400; 
+            color: var(--ui-text-color); /* Use UI variable */
+            font-weight: 400;
         }
 
         input[type="range"] {
-            -webkit-appearance: none; 
-            appearance: none; 
+            -webkit-appearance: none;
+            appearance: none;
             width: 100%;
-            height: 8px; 
-            background: #ddd; 
-            border-radius: 5px; 
-            outline: none; 
-            padding: 0; 
+            height: 8px;
+            background: #ddd; /* Consider making this a variable too if needed */
+            border-radius: 5px;
+            outline: none;
+            padding: 0;
         }
+         body.ui-dark-theme input[type="range"] {
+             background: #555; /* Darker track for dark theme */
+         }
+
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px; 
-            height: 18px; 
-            background: var(--primary-accent); 
-            border-radius: 50%; 
+            width: 18px;
+            height: 18px;
+            background: var(--primary-accent);
+            border-radius: 50%;
             cursor: pointer;
-            border: 2px solid var(--input-bg); 
+            border: 2px solid var(--ui-input-bg); /* Use UI variable */
         }
 
-        input[type="range"]::-moz-range-thumb { 
+        input[type="range"]::-moz-range-thumb {
             width: 16px;
             height: 16px;
             background: var(--primary-accent);
             border-radius: 50%;
             cursor: pointer;
-            border: 2px solid var(--input-bg);
+            border: 2px solid var(--ui-input-bg); /* Use UI variable */
         }
-        
+
         select, .toggle-switch button {
             width: 100%;
             padding: 10px 12px;
             border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
+            border: 1px solid var(--ui-border-color); /* Use UI variable */
+            background-color: var(--ui-input-bg); /* Use UI variable */
+            color: var(--ui-text-color); /* Use UI variable for text inside */
             box-sizing: border-box;
             font-size: 0.95em;
             font-family: var(--body-font);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
+         /* Style select dropdown arrow */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23' + (document.body.classList.contains('ui-dark-theme') ? '95a5a6' : '6c757d').substring(1) + '%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+        }
+         body.ui-dark-theme select {
+             /* Update arrow color for dark theme if needed, requires JS or more complex CSS */
+              background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2395a5a6%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+         }
+
 
         input[type="range"]:focus, select:focus, .toggle-switch button:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); 
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
             outline: none;
         }
 
         input[type="checkbox"] {
-            width: 1.3em; 
+            width: 1.3em;
             height: 1.3em;
-            /* margin-right: 8px; Removed, using gap in inline-control */
-            accent-color: var(--primary-accent); 
+            accent-color: var(--primary-accent);
             cursor: pointer;
-            vertical-align: middle; 
+            vertical-align: middle;
         }
 
-        button.control-button { 
+        button.control-button {
             color: white;
             background-color: var(--primary-accent);
             cursor: pointer;
@@ -204,72 +305,65 @@
             font-size: 1em;
             font-weight: 500;
             padding: 12px 15px;
-            border-radius: 6px; 
+            border-radius: 6px;
         }
         button.control-button:hover {
-            background-color: #0056b3; 
-            transform: translateY(-1px); 
+            background-color: #0056b3; /* Needs dark theme equivalent */
+            transform: translateY(-1px);
         }
+         body.ui-dark-theme button.control-button:hover {
+             background-color: #2980b9; /* Dark theme hover */
+         }
+
         button.control-button:active {
-            transform: translateY(0px); 
+            transform: translateY(0px);
         }
 
         #saveImageButton { background-color: #28a745; }
         #saveImageButton:hover { background-color: #1e7e34; }
+         body.ui-dark-theme #saveImageButton { background-color: #2ecc71; }
+         body.ui-dark-theme #saveImageButton:hover { background-color: #27ae60; }
 
-        .slider-value { 
+
+        .slider-value {
             font-weight: 500;
             color: var(--primary-accent);
             margin-left: 8px;
             font-size: 0.9em;
         }
-        
-        .toggle-switch {
-            display: flex;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden; 
-        }
-        .toggle-switch button {
-            flex: 1; 
-            padding: 10px;
-            border: none;
-            background-color: var(--input-bg);
-            color: var(--secondary-accent);
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            border-radius: 0; 
-        }
-        .toggle-switch button.active { 
-            background-color: var(--primary-accent);
-            color: white;
-            font-weight: 500;
-        }
-        .toggle-switch button:first-child { 
-            border-right: 1px solid var(--border-color); 
-        }
+
+        /* Removed toggle switch CSS as it's replaced by select */
 
         /* Class to visually de-emphasize disabled controls */
         .control-disabled {
             opacity: 0.5;
-            pointer-events: none; /* Optional: also disable clicks on the div */
+            pointer-events: none; /* Prevent interaction */
         }
         .control-disabled input[type="range"]::-webkit-slider-thumb {
-            background: var(--secondary-accent); /* Grey out thumb */
+            background: var(--secondary-accent);
         }
         .control-disabled input[type="range"]::-moz-range-thumb {
-            background: var(--secondary-accent); /* Grey out thumb for Firefox */
+            background: var(--secondary-accent);
         }
 
 
     </style>
 </head>
 <body>
-    <h1 class="main-title">Kaleidoscope Dreams</h1>
+    <header>
+        <h1 class="main-title">Kaleidoscope Dreams</h1>
+        <div class="ui-theme-toggle-container">
+             <label for="uiThemeToggleCheckbox"><i class="fas fa-sun"></i></label> <label class="switch">
+               <input type="checkbox" id="uiThemeToggleCheckbox">
+               <span class="slider round"></span>
+             </label>
+             <label for="uiThemeToggleCheckbox"><i class="fas fa-moon"></i></label> </div>
+    </header>
+
     <p class="info-text">Craft mesmerizing symmetrical art. Click and drag on the canvas, and explore the controls to shape your vision.</p>
-    
+
     <div id="canvas-container"></div>
-    
+
     <div class="canvas-actions-bar">
         <button id="clearButton" class="control-button">Clear Canvas</button>
         <button id="saveImageButton" class="control-button">Save Image</button>
@@ -327,21 +421,23 @@
         <fieldset>
             <legend>Canvas & Effects</legend>
             <div>
-                <label for="canvasThemeToggle">Canvas Theme:</label>
-                <div class="toggle-switch" id="canvasThemeToggle">
-                    <button data-theme="light" class="active">Light</button>
-                    <button data-theme="dark">Dark</button>
-                </div>
+                <label for="canvasThemeSelect">Canvas Theme:</label> <select id="canvasThemeSelect">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="beige">Beige</option>
+                    <option value="pastelBlue">Pastel Blue</option>
+                    <option value="charcoal">Charcoal</option>
+                </select>
             </div>
             <div>
                 <label for="symmetrySlider">Symmetry: <span id="symmetryDisplayValue" class="slider-value">6</span></label>
-                <input type="range" id="symmetrySlider" min="2" max="30" value="6"> 
+                <input type="range" id="symmetrySlider" min="2" max="30" value="6">
             </div>
             <div class="inline-control">
                 <label for="trailEffectCheckbox">Trail Effect:</label>
                 <input type="checkbox" id="trailEffectCheckbox">
             </div>
-            <div id="trailPersistenceControlContainer"> 
+            <div id="trailPersistenceControlContainer">
                 <label for="trailFadeSlider">Trail Persistence: <span id="trailFadeValue" class="slider-value">85</span></label>
                 <input type="range" id="trailFadeSlider" min="0" max="98" value="85" disabled>
             </div>
@@ -350,65 +446,83 @@
 
     <script>
         // --- Global Variables ---
-        let symmetry = 6; 
-        let angle;       
-        let p5Canvas;    
+        let symmetry = 6;
+        let angle;
+        let p5Canvas;
 
-        // Drawing Style Variables
-        let drawingMode = 'line';       
-        let currentBrushSize = 10;    
-        let enableShapeSpin = false;    
-        let currentShapeAngle = 0;    
+        // Drawing Style
+        let drawingMode = 'line';
+        let currentBrushSize = 10;
+        let enableShapeSpin = false;
+        let currentShapeAngle = 0;
 
-        // Color Variables
-        let hueValue = 0;             
-        let saturationValue = 90;     
-        let brightnessValue = 90;     
-        let alphaValue = 70;          
-        let selectedColorPalette = 'rainbow'; 
+        // Color
+        let hueValue = 0;
+        let saturationValue = 90;
+        let brightnessValue = 90;
+        let alphaValue = 70;
+        let selectedColorPalette = 'rainbow';
 
-        // Canvas & Effects Variables
-        let isDarkTheme = false;      
+        // Canvas & Effects
+        let selectedCanvasTheme = 'light'; // Default canvas theme name
+        let currentCanvasBg; // Will hold the HSB array for the current theme
         let trailEffectActive = false;
-        let trailPersistence = 85;    
+        let trailPersistence = 85;
 
-        const lightThemeBg = [10, 5, 97]; 
-        const darkThemeBg = [220, 15, 15]; 
+        // Canvas Theme Definitions (HSB format: [Hue, Saturation, Brightness])
+        const canvasThemes = {
+            'light': [10, 5, 97],      // Very light grey
+            'dark': [220, 15, 15],     // Dark blue-grey
+            'beige': [35, 15, 95],     // Warm beige
+            'pastelBlue': [195, 30, 96], // Soft blue
+            'charcoal': [0, 0, 20]       // Dark grey/charcoal
+        };
 
         const palettes = {
-            rainbow: { type: 'cycle', hues: [0, 360] }, 
+            rainbow: { type: 'cycle', hues: [0, 360] },
             ocean: { type: 'random', colors: [[180, 70, 80], [190, 80, 70], [200, 90, 90], [210, 60, 60], [220, 75, 75]] },
             sunset: { type: 'random', colors: [[15, 90, 90], [30, 100, 85], [45, 85, 90], [5, 80, 80], [350, 90, 75]] },
             forest: { type: 'random', colors: [[90, 60, 50], [100, 70, 60], [110, 50, 40], [120, 65, 55], [80, 55, 45]] },
             monochrome: { type: 'random', colors: [[0, 0, 20], [0, 0, 40], [0, 0, 60], [0, 0, 70], [0, 0, 80]] }
         };
-        let currentPaletteColorIndex = 0; 
+        let currentPaletteColorIndex = 0;
 
 
-        // --- P5.js Setup Function: Runs once when the sketch starts ---
+        // --- P5.js Setup Function ---
         function setup() {
-            p5Canvas = createCanvas(600, 600); 
-            p5Canvas.parent('canvas-container'); 
+            p5Canvas = createCanvas(600, 600);
+            p5Canvas.parent('canvas-container');
 
-            angleMode(DEGREES); 
-            colorMode(HSB, 360, 100, 100, 100); 
-            applyCanvasTheme(); 
-            updateSymmetry(symmetry); 
+            angleMode(DEGREES);
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            // Apply initial UI theme from localStorage if available
+            const savedUiTheme = localStorage.getItem('uiTheme');
+            if (savedUiTheme === 'dark') {
+                 document.body.classList.add('ui-dark-theme');
+                 select('#uiThemeToggleCheckbox').elt.checked = true; // Set toggle state
+            } else {
+                 document.body.classList.remove('ui-dark-theme'); // Ensure light theme if not dark
+                 select('#uiThemeToggleCheckbox').elt.checked = false;
+            }
+
+            applyCanvasTheme(); // Sets initial background based on default selectedCanvasTheme
+            updateSymmetry(symmetry);
 
             // --- UI Element Setup & Event Handlers ---
             select('#drawingModeSelect').changed(function() { drawingMode = this.value(); });
-            
+
             select('#brushSizeSlider').input(function() {
                 currentBrushSize = parseInt(this.value());
                 select('#brushSizeValue').html(currentBrushSize);
             });
-            select('#brushSizeValue').html(currentBrushSize); 
+            select('#brushSizeValue').html(currentBrushSize);
 
             select('#shapeSpinCheckbox').changed(function() { enableShapeSpin = this.checked(); });
 
-            select('#colorPaletteSelect').changed(function() { 
-                selectedColorPalette = this.value(); 
-                currentPaletteColorIndex = 0; 
+            select('#colorPaletteSelect').changed(function() {
+                selectedColorPalette = this.value();
+                currentPaletteColorIndex = 0;
             });
 
             select('#saturationSlider').input(function() {
@@ -422,22 +536,33 @@
                 select('#brightnessValue').html(brightnessValue);
             });
             select('#brightnessValue').html(brightnessValue);
-            
-            select('#alphaSlider').input(function() { 
+
+            select('#alphaSlider').input(function() {
                 alphaValue = parseInt(this.value());
                 select('#alphaValue').html(alphaValue);
             });
             select('#alphaValue').html(alphaValue);
 
-            const themeToggleButtons = selectAll('#canvasThemeToggle button');
-            themeToggleButtons.forEach(button => {
-                button.mousePressed(() => {
-                    isDarkTheme = button.attribute('data-theme') === 'dark';
-                    themeToggleButtons.forEach(btn => btn.removeClass('active')); 
-                    button.addClass('active'); 
-                    applyCanvasTheme(); 
-                });
+            // UI Theme Toggle Switch
+            select('#uiThemeToggleCheckbox').changed(function() {
+                if (this.checked()) {
+                    document.body.classList.add('ui-dark-theme');
+                    localStorage.setItem('uiTheme', 'dark'); // Save preference
+                } else {
+                    document.body.classList.remove('ui-dark-theme');
+                    localStorage.setItem('uiTheme', 'light'); // Save preference
+                }
+                // Potentially update elements not covered by CSS vars if needed
             });
+
+            // Canvas Theme Selector (Replaces Toggle)
+            select('#canvasThemeSelect').changed(function() {
+                selectedCanvasTheme = this.value();
+                applyCanvasTheme();
+            });
+            // Set initial value for dropdown if needed (though default HTML value works)
+             select('#canvasThemeSelect').value(selectedCanvasTheme);
+
 
             select('#symmetrySlider').input(function() {
                 updateSymmetry(parseInt(this.value()));
@@ -445,130 +570,133 @@
             select('#symmetryDisplayValue').html(symmetry);
 
             const trailFadeSlider = select('#trailFadeSlider');
-            const trailPersistenceControlContainer = select('#trailPersistenceControlContainer'); // Get the div
+            const trailPersistenceControlContainer = select('#trailPersistenceControlContainer');
 
             trailFadeSlider.input(function() {
                 trailPersistence = parseInt(this.value());
                 select('#trailFadeValue').html(trailPersistence);
             });
-            select('#trailFadeValue').html(trailPersistence); 
+            select('#trailFadeValue').html(trailPersistence);
 
             select('#trailEffectCheckbox').changed(function() {
                 trailEffectActive = this.checked();
                 if (trailEffectActive) {
-                    trailFadeSlider.removeAttribute('disabled'); 
-                    trailPersistenceControlContainer.removeClass('control-disabled'); // Visually enable
+                    trailFadeSlider.removeAttribute('disabled');
+                    trailPersistenceControlContainer.removeClass('control-disabled');
                 } else {
-                    trailFadeSlider.attribute('disabled', ''); 
-                    trailPersistenceControlContainer.addClass('control-disabled'); // Visually disable
-                    applyCanvasTheme(); 
+                    trailFadeSlider.attribute('disabled', '');
+                    trailPersistenceControlContainer.addClass('control-disabled');
+                    applyCanvasTheme(); // Clear to solid background
                 }
             });
-             // Initial check for trail persistence control visibility
+            // Initial check for trail persistence control visibility
             if (!trailEffectActive) {
                 trailPersistenceControlContainer.addClass('control-disabled');
             }
 
-
-            select('#clearButton').mousePressed(applyCanvasTheme); 
+            select('#clearButton').mousePressed(applyCanvasTheme);
             select('#saveImageButton').mousePressed(saveKaleidoscopeImage);
         }
-        
+
+        // --- Function to apply the current canvas theme ---
         function applyCanvasTheme() {
-            let bg = isDarkTheme ? darkThemeBg : lightThemeBg; 
-            background(bg[0], bg[1], bg[2]); 
+            // Get the HSB color array from the themes object based on the selected name
+            currentCanvasBg = canvasThemes[selectedCanvasTheme] || canvasThemes['light']; // Default to light if invalid
+            background(currentCanvasBg[0], currentCanvasBg[1], currentCanvasBg[2]);
         }
 
+        // --- Function to update symmetry settings ---
         function updateSymmetry(newSymmetry) {
             symmetry = newSymmetry;
-            angle = 360 / symmetry; 
-            select('#symmetryDisplayValue').html(symmetry); 
-            applyCanvasTheme(); 
+            angle = 360 / symmetry;
+            select('#symmetryDisplayValue').html(symmetry);
+            applyCanvasTheme(); // Clear canvas with current theme
         }
 
+        // --- Function to save the current canvas ---
         function saveKaleidoscopeImage() {
-            saveCanvas(p5Canvas, 'kaleidoscope_dream', 'png'); 
+            saveCanvas(p5Canvas, 'kaleidoscope_dream', 'png');
         }
-        
+
+        // --- Helper function to draw a star ---
         function drawStar(x, y, radius1, radius2, npoints) {
-            let angleOffset = 360 / npoints; 
-            let halfAngleOffset = angleOffset / 2.0; 
-            beginShape(); 
-            for (let a = 0; a < 360; a += angleOffset) { 
+            let angleOffset = 360 / npoints;
+            let halfAngleOffset = angleOffset / 2.0;
+            beginShape();
+            for (let a = 0; a < 360; a += angleOffset) {
                 vertex(x + cos(a) * radius2, y + sin(a) * radius2);
                 vertex(x + cos(a + halfAngleOffset) * radius1, y + sin(a + halfAngleOffset) * radius1);
             }
-            endShape(CLOSE); 
+            endShape(CLOSE);
         }
-        
-        function getCurrentDrawingColor() {
-            let h, s, b; 
-            const palette = palettes[selectedColorPalette]; 
 
-            if (palette.type === 'cycle') { 
-                hueValue = (hueValue + 0.7) % 360; 
+        // --- Function to get the current drawing color ---
+        function getCurrentDrawingColor() {
+            let h, s, b;
+            const palette = palettes[selectedColorPalette];
+
+            if (palette.type === 'cycle') {
+                hueValue = (hueValue + 0.7) % 360;
                 h = hueValue;
-                s = saturationValue; 
-                b = brightnessValue; 
-            } else { 
+                s = saturationValue;
+                b = brightnessValue;
+            } else {
                 let colors = palette.colors;
-                if (frameCount % 10 === 0) { 
+                if (frameCount % 10 === 0) {
                      currentPaletteColorIndex = (currentPaletteColorIndex + 1) % colors.length;
                 }
-                let selected = colors[currentPaletteColorIndex]; 
-                h = selected[0]; 
-                s = selected[1]; 
-                b = selected[2]; 
+                let selected = colors[currentPaletteColorIndex];
+                h = selected[0];
+                s = selected[1];
+                b = selected[2];
             }
-            return [h, s, b, alphaValue]; 
+            // Adjust brightness slightly based on canvas theme for better visibility
+            let brightnessAdjustment = (selectedCanvasTheme === 'dark' || selectedCanvasTheme === 'charcoal') ? 10 : -5;
+             b = constrain(b + brightnessAdjustment, 10, 95); // Ensure brightness stays within reasonable bounds
+
+            return [h, s, b, alphaValue];
         }
 
+        // --- P5.js Draw Loop ---
         function draw() {
+            // Handle trail effect background redraw
             if (trailEffectActive) {
-                let bg = isDarkTheme ? darkThemeBg : lightThemeBg;
-                let trailAlphaForBg = map(trailPersistence, 0, 98, 95, 2); 
+                let bg = currentCanvasBg; // Use the currently selected canvas theme color
+                let trailAlphaForBg = map(trailPersistence, 0, 98, 95, 2);
                 background(bg[0], bg[1], bg[2], trailAlphaForBg);
-            } else if (frameCount === 1 && !trailEffectActive) { 
-                applyCanvasTheme();
+            } else if (frameCount === 1 && !trailEffectActive) {
+                applyCanvasTheme(); // Ensure solid background if trail starts off
             }
 
-            translate(width / 2, height / 2);
+            translate(width / 2, height / 2); // Move origin to center
 
+            // Update shape spin angle if enabled
             if (enableShapeSpin) {
-                currentShapeAngle = (currentShapeAngle + 0.5) % 360; 
+                currentShapeAngle = (currentShapeAngle + 0.5) % 360;
             }
 
+            // Draw if mouse is pressed within canvas
             if (mouseIsPressed && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
                 let mx = mouseX - width / 2;
                 let my = mouseY - height / 2;
-                let pmx = pmouseX - width / 2; 
-                let pmy = pmouseY - height / 2; 
+                let pmx = pmouseX - width / 2;
+                let pmy = pmouseY - height / 2;
 
-                let [h, s, b, a] = getCurrentDrawingColor(); 
-                
-                stroke(h, s, b, a); 
-                fill(h, s, b, a * 0.85); 
-                
-                drawSymmetricalShapes(mx, my, pmx, pmy);
+                let [h, s, b, a] = getCurrentDrawingColor();
+
+                stroke(h, s, b, a);
+                fill(h, s, b, a * 0.85);
+
+                drawSymmetricalShapes(mx, my, pmx, pmy); // Draw the shapes symmetrically
             }
         }
 
+        // --- Function to draw shapes symmetrically ---
         function drawSymmetricalShapes(mx, my, pmx, pmy) {
-            for (let i = 0; i < symmetry; i++) { 
-                rotate(angle); 
-                
-                push(); 
-                if (enableShapeSpin && drawingMode !== 'line') {
-                    translate(mx, my); 
-                    rotate(currentShapeAngle); 
-                    drawCurrentShape(0, 0, pmx - mx, pmy - my); 
-                } else {
-                    drawCurrentShape(mx, my, pmx, pmy); 
-                }
-                pop(); 
-                
-                push();
-                scale(1, -1); 
+            for (let i = 0; i < symmetry; i++) {
+                rotate(angle);
+
+                push(); // Save segment rotation
                 if (enableShapeSpin && drawingMode !== 'line') {
                     translate(mx, my);
                     rotate(currentShapeAngle);
@@ -576,24 +704,39 @@
                 } else {
                     drawCurrentShape(mx, my, pmx, pmy);
                 }
-                pop(); 
+                pop(); // Restore segment rotation
+
+                push(); // Prepare for reflection
+                scale(1, -1); // Flip y-axis
+                if (enableShapeSpin && drawingMode !== 'line') {
+                    translate(mx, my);
+                    rotate(currentShapeAngle);
+                    drawCurrentShape(0, 0, pmx - mx, pmy - my);
+                } else {
+                    drawCurrentShape(mx, my, pmx, pmy);
+                }
+                pop(); // Restore from reflection
             }
         }
 
+        // --- Function to draw the selected shape ---
         function drawCurrentShape(shapeX, shapeY, prevShapeX, prevShapeY) {
-            push(); 
-            
-            let R = currentBrushSize * 1.5; 
-            let lineWeight = currentBrushSize; 
+            push(); // Isolate shape styles
+
+            let R = currentBrushSize * 1.5;
+            let lineWeight = currentBrushSize;
 
             if (drawingMode === 'line') {
-                let speed = dist(mouseX, mouseY, pmouseX, pmouseY); 
+                let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
                 lineWeight = map(speed, 0, 30, currentBrushSize * 1.5, currentBrushSize * 0.5, true);
-                lineWeight = constrain(lineWeight, 1, currentBrushSize * 2); 
+                lineWeight = constrain(lineWeight, 1, currentBrushSize * 2);
                 strokeWeight(lineWeight);
-                noFill(); 
+                noFill();
             } else {
-                strokeWeight(max(1, currentBrushSize / 6)); 
+                 // Use a subtle stroke for filled shapes or noStroke()
+                 // stroke(hueValue, saturationValue * 0.8, brightnessValue * 0.8, alphaValue * 0.5); // Example subtle stroke
+                 // strokeWeight(max(1, currentBrushSize / 8));
+                 noStroke(); // Cleaner look for filled shapes
             }
 
             switch (drawingMode) {
@@ -604,38 +747,39 @@
                     ellipse(shapeX, shapeY, R * 2, R * 2);
                     break;
                 case 'triangle':
-                    let r = R * 1.2; 
+                    let r = R * 1.2;
                     triangle(
-                        shapeX, shapeY - r, 
-                        shapeX - r * cos(30), shapeY + r * sin(30), 
-                        shapeX + r * cos(30), shapeY + r * sin(30)  
+                        shapeX, shapeY - r,
+                        shapeX - r * cos(30), shapeY + r * sin(30),
+                        shapeX + r * cos(30), shapeY + r * sin(30)
                     );
                     break;
                 case 'star':
-                    drawStar(shapeX, shapeY, R * 0.6, R * 1.3, 5); 
+                    drawStar(shapeX, shapeY, R * 0.6, R * 1.3, 5);
                     break;
-                case 'randomShape':  
+                case 'randomShape':
                     beginShape();
-                    let numVertices = floor(random(3, 8)); 
+                    let numVertices = floor(random(3, 8));
                     for (let j = 0; j < numVertices; j++) {
-                        let angleR = random(360); 
-                        let radiusR = random(R * 0.3, R * 1.2); 
+                        let angleR = random(360);
+                        let radiusR = random(R * 0.3, R * 1.2);
                         vertex(shapeX + cos(angleR) * radiusR, shapeY + sin(angleR) * radiusR);
                     }
                     endShape(CLOSE);
                     break;
             }
-            pop(); 
+            pop(); // Restore previous styles
         }
 
+        // --- Touch event handlers ---
         function touchStarted(event) {
-          if (event.target === p5Canvas.elt) { 
-            return false; 
+          if (event.target === p5Canvas.elt) {
+            return false;
           }
         }
         function touchMoved(event) {
           if (event.target === p5Canvas.elt) {
-            return false; 
+            return false;
           }
         }
     </script>
