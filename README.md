@@ -6,7 +6,7 @@
 
 
 
-<h1 align="center">🎨 Kaleidoscope 🎨</h1>
+<h1 align="center"> Kaleidoscope </h1>
 
 <p align="center">
   An interactive kaleidoscope created using p5.js. Draw with various shapes and settings, mirrored across multiple segments to create beautiful, symmetrical patterns. Dynamically adjust symmetry, colors, brush styles, and effects through a user-friendly interface.
