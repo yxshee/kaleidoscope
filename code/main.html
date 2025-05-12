@@ -3,19 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>p5.js Kaleidoscope</title>
+    <title>Advanced p5.js Kaleidoscope</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e9e9e9; /* Lighter background for the page */
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            padding-bottom: 20px; /* Space for controls if page is short */
+        }
+        #canvas-container {
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* More prominent shadow */
+            border-radius: 8px; /* Rounded corners for the container if needed */
+            overflow: hidden; /* Ensures canvas border-radius is respected */
+        }
+        canvas {
+            display: block; /* Removes extra space below canvas */
+            border: 2px solid #555; /* Darker border for canvas */
+            border-radius: 8px; /* Rounded corners for the canvas itself */
+        }
+        .controls-grid {
+            display: flex;
+            flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+            gap: 20px; /* Increased gap */
+            margin-top: 20px;
+            justify-content: center; /* Center the fieldsets */
+            max-width: 800px; /* Max width for the control area */
+            width: 95%; /* Responsive width */
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px 20px; /* More padding */
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex: 1 1 250px; /* Flex properties for responsive fieldsets */
+            min-width: 220px; /* Minimum width before wrapping */
+        }
+        fieldset legend {
+            font-weight: bold;
+            color: #007bff;
+            padding: 0 10px; /* More padding for legend */
+            font-size: 1.1em;
+        }
+        fieldset div {
+            margin-bottom: 12px; /* Slightly more margin */
+            display: flex;
+            flex-direction: column; /* Stack label and input vertically */
+            align-items: flex-start; /* Align items to the start */
+            gap: 5px; /* Gap between label and input */
+        }
+        fieldset div.inline-label { /* For checkbox where label is beside */
+            flex-direction: row;
+            align-items: center;
+        }
+        fieldset label {
+            font-size: 0.95em; /* Slightly smaller label */
+            color: #444;
+        }
+        input[type="range"], select, button {
+            width: 100%; /* Make inputs take full width of their container */
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 0.9em;
+        }
+        input[type="checkbox"] {
+            width: auto; /* Checkbox default width */
+        }
+        button {
+            color: white;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none; /* Remove default border */
+            font-size: 1em; /* Reset font size for buttons */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #saveImageButton {
+            background-color: #28a745; /* Green for save */
+        }
+        #saveImageButton:hover {
+            background-color: #1e7e34;
+        }
+        .info-text {
+            margin-top: 25px;
+            font-size: 1em;
+            color: #555;
+            text-align: center;
+        }
+        /* Span for slider values */
+        .slider-value {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
+    <p class="info-text">Create mesmerizing patterns! Click & drag on the canvas. Adjust controls below.</p>
     <div id="canvas-container"></div>
-    <div class="controls">
-        <button id="clearButton">Clear Canvas</button>
-        <label for="symmetrySlider">Symmetry: <span id="symmetryValue">6</span></label>
-        <input type="range" id="symmetrySlider" min="2" max="20" value="6">
-    </div>
-    <p class="info-text">Click and drag your mouse on the canvas to draw! Use the slider to change the number of symmetry segments. Press "Clear Canvas" to start over.</p>
 
-    <script src="sketch.js"></script>
+    <div class="controls-grid">
+        <fieldset>
+            <legend>Drawing Style</legend>
+            <div>
+                <label for="drawingModeSelect">Shape:</label>
+                <select id="drawingModeSelect">
+                    <option value="line">Line</option>
+                    <option value="circle">Circle</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="star">Star</option>
+                    <option value="randomShape">Random Polygon</option>
+                </select>
+            </div>
+            <div>
+                <label for="brushSizeSlider">Brush Size: <span id="brushSizeValue" class="slider-value">10</span></label>
+                <input type="range" id="brushSizeSlider" min="1" max="50" value="10">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Color Palette</legend>
+            <div>
+                <label for="saturationSlider">Saturation: <span id="saturationValue" class="slider-value">90</span></label>
+                <input type="range" id="saturationSlider" min="0" max="100" value="90">
+            </div>
+            <div>
+                <label for="brightnessSlider">Brightness: <span id="brightnessValue" class="slider-value">90</span></label>
+                <input type="range" id="brightnessSlider" min="0" max="100" value="90">
+            </div>
+            <div>
+                <label for="alphaSlider">Opacity: <span id="alphaValue" class="slider-value">70</span></label>
+                <input type="range" id="alphaSlider" min="0" max="100" value="70">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Canvas & Effects</legend>
+            <div>
+                <label for="symmetrySlider">Symmetry Segments: <span id="symmetryDisplayValue" class="slider-value">6</span></label>
+                <input type="range" id="symmetrySlider" min="2" max="24" value="6">
+            </div>
+            <div class="inline-label">
+                <input type="checkbox" id="trailEffectCheckbox">
+                <label for="trailEffectCheckbox">Trail Effect</label>
+            </div>
+            <button id="clearButton">Clear Canvas</button>
+            <button id="saveImageButton">Save Image</button>
+        </fieldset>
+    </div>
+
+    <script>
+        // --- Global Variables ---
+        let symmetry = 6;
+        let angle;
+        let canvas;
+
+        // Drawing Style
+        let drawingMode = 'line';
+        let currentBrushSize = 10;
+
+        // Color
+        let hueValue = 0;
+        let saturationValue = 90;
+        let brightnessValue = 90;
+        let alphaValue = 70;
+
+        // Effects
+        let trailEffectActive = false;
+        const TRAIL_ALPHA = 15; // Opacity of background redraw for trail effect
+
+        // --- P5.js Setup Function ---
+        function setup() {
+            canvas = createCanvas(600, 600);
+            canvas.parent('canvas-container');
+
+            angleMode(DEGREES);
+            colorMode(HSB, 360, 100, 100, 100); // Set color mode once
+            background(10, 5, 95); // Initial very light grey, almost white background for drawing area
+            updateSymmetry(symmetry);
+
+            // --- UI Element Setup & Event Handlers ---
+            select('#drawingModeSelect').changed(function() { drawingMode = this.value(); });
+            
+            select('#brushSizeSlider').input(function() {
+                currentBrushSize = this.value();
+                select('#brushSizeValue').html(currentBrushSize);
+            });
+            select('#brushSizeValue').html(currentBrushSize); // Initial display
+
+            select('#saturationSlider').input(function() {
+                saturationValue = this.value();
+                select('#saturationValue').html(saturationValue);
+            });
+            select('#saturationValue').html(saturationValue);
+
+            select('#brightnessSlider').input(function() {
+                brightnessValue = this.value();
+                select('#brightnessValue').html(brightnessValue);
+            });
+            select('#brightnessValue').html(brightnessValue);
+            
+            select('#alphaSlider').input(function() {
+                alphaValue = this.value();
+                select('#alphaValue').html(alphaValue);
+            });
+            select('#alphaValue').html(alphaValue);
+
+            select('#symmetrySlider').input(function() {
+                updateSymmetry(parseInt(this.value()));
+            });
+            select('#symmetryDisplayValue').html(symmetry);
+
+
+            select('#trailEffectCheckbox').changed(function() {
+                trailEffectActive = this.checked();
+                if (!trailEffectActive) { // If trail is turned off, clear to solid background once
+                    clearDrawing();
+                }
+            });
+
+            select('#clearButton').mousePressed(clearDrawing);
+            select('#saveImageButton').mousePressed(saveKaleidoscopeImage);
+        }
+
+        // --- Update Symmetry ---
+        function updateSymmetry(newSymmetry) {
+            symmetry = newSymmetry;
+            angle = 360 / symmetry;
+            select('#symmetryDisplayValue').html(symmetry);
+            clearDrawing(); // Clear canvas for new symmetry
+        }
+
+        // --- Clear Drawing Area ---
+        function clearDrawing() {
+            // Set a solid background (light grey, almost white)
+            background(10, 5, 95); // HSB: very low saturation, high brightness
+        }
+
+        // --- Save Canvas Image ---
+        function saveKaleidoscopeImage() {
+            saveCanvas(canvas, 'kaleidoscope_art', 'png');
+        }
+        
+        // --- Draw Star Shape ---
+        function drawStar(x, y, radius1, radius2, npoints) {
+            let angleOffset = 360 / npoints;
+            let halfAngleOffset = angleOffset / 2.0;
+            beginShape();
+            for (let a = 0; a < 360; a += angleOffset) {
+                let sx = x + cos(a) * radius2;
+                let sy = y + sin(a) * radius2;
+                vertex(sx, sy);
+                sx = x + cos(a + halfAngleOffset) * radius1;
+                sy = y + sin(a + halfAngleOffset) * radius1;
+                vertex(sx, sy);
+            }
+            endShape(CLOSE);
+        }
+
+
+        // --- P5.js Draw Loop ---
+        function draw() {
+            // Handle trail effect: draw a semi-transparent background
+            if (trailEffectActive) {
+                background(10, 5, 95, TRAIL_ALPHA / 100.0 * 100); // HSB with alpha. Alpha is 0-100 for HSB mode.
+            }
+
+            // Translate to the center for symmetrical drawing
+            translate(width / 2, height / 2);
+
+            // Only draw if mouse is pressed and within canvas bounds
+            if (mouseIsPressed && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+                let mx = mouseX - width / 2;
+                let my = mouseY - height / 2;
+                let pmx = pmouseX - width / 2;
+                let pmy = pmouseY - height / 2;
+
+                // Dynamic hue cycling
+                hueValue = (hueValue + 0.7) % 360;
+                
+                // Set stroke and fill properties
+                stroke(hueValue, saturationValue, brightnessValue, alphaValue);
+                fill(hueValue, saturationValue, brightnessValue, alphaValue * 0.8); // Slightly more transparent fill
+                strokeWeight(currentBrushSize);
+
+                // Main symmetry loop
+                for (let i = 0; i < symmetry; i++) {
+                    rotate(angle);
+
+                    // --- Draw selected shape ---
+                    push(); // Isolate transformations for the shape itself
+                    // Apply transformations to the mouse coordinates if needed for the shape
+                    // For example, if shapes are drawn at (0,0) after translating to mouse pos
+                    
+                    let R = currentBrushSize * 1.5; // Radius for shapes, proportional to brush size
+
+                    switch (drawingMode) {
+                        case 'line':
+                            strokeWeight(currentBrushSize); // Ensure line uses brush size
+                            noFill(); // Lines don't typically have fill
+                            line(mx, my, pmx, pmy);
+                            break;
+                        case 'circle':
+                            noStroke(); // Example: filled circles
+                            ellipse(mx, my, R * 2, R * 2);
+                            break;
+                        case 'triangle':
+                            noStroke();
+                            let r = R * 1.5;
+                            triangle(
+                                mx, my - r,
+                                mx - r * cos(30), my + r * sin(30),
+                                mx + r * cos(30), my + r * sin(30)
+                            );
+                            break;
+                        case 'star':
+                            noStroke();
+                            // Star(x, y, radius1, radius2, npoints)
+                            drawStar(mx, my, R*0.8, R*1.6, 5);
+                            break;
+                        case 'randomShape':
+                            noStroke();
+                            beginShape();
+                            let numVertices = floor(random(3, 7)); // 3 to 6 vertices
+                            for (let j = 0; j < numVertices; j++) {
+                                let angleR = random(360);
+                                let radiusR = random(R * 0.5, R * 1.5);
+                                vertex(mx + cos(angleR) * radiusR, my + sin(angleR) * radiusR);
+                            }
+                            endShape(CLOSE);
+                            break;
+                    }
+                    pop(); // Restore from shape-specific transformations
+
+                    // --- Reflection ---
+                    // For line, we draw it twice (original and reflected)
+                    // For filled shapes, the shape itself is drawn, then its reflection is drawn.
+                    push();
+                    scale(1, -1); // Flip y-axis for reflection
+
+                    // Redraw the selected shape for reflection
+                    // (This logic is similar to above, could be a separate function)
+                    switch (drawingMode) {
+                        case 'line':
+                            strokeWeight(currentBrushSize);
+                            noFill();
+                            line(mx, my, pmx, pmy);
+                            break;
+                        case 'circle':
+                            noStroke();
+                            ellipse(mx, my, R * 2, R * 2);
+                            break;
+                        case 'triangle':
+                            noStroke();
+                            let r = R * 1.5;
+                            triangle(
+                                mx, my - r,
+                                mx - r * cos(30), my + r * sin(30),
+                                mx + r * cos(30), my + r * sin(30)
+                            );
+                            break;
+                        case 'star':
+                             noStroke();
+                            drawStar(mx, my, R*0.8, R*1.6, 5);
+                            break;
+                        case 'randomShape':
+                            noStroke();
+                            beginShape();
+                            let numVertices = floor(random(3, 7));
+                            for (let j = 0; j < numVertices; j++) {
+                                let angleR = random(360);
+                                let radiusR = random(R * 0.5, R * 1.5);
+                                vertex(mx + cos(angleR) * radiusR, my + sin(angleR) * radiusR);
+                            }
+                            endShape(CLOSE);
+                            break;
+                    }
+                    pop(); // Restore from reflection scale
+                }
+            }
+        }
+
+        // Prevent default browser behavior for touch events on canvas
+        function touchStarted() {
+          if (target === canvas.elt) { // Check if touch is on canvas
+            return false; // Prevent default
+          }
+        }
+
+        function touchMoved() {
+          if (target === canvas.elt) {
+            return false;
+          }
+        }
+    </script>
 </body>
 </html>
