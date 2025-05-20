@@ -178,18 +178,18 @@ Contributions are welcome! Feel free to submit pull requests with bug fixes, new
  <img width="19%" alt="Kaleidoscope Preview" src="assets/01.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/02.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/03.png" />
-  <img width="19%" alt="Kaleidoscope Preview" src="assets/04.png" />
+  <img width="19%" alt="Kaleidoscope Preview" src="assets/014.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/05.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/06.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/07.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/08.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/09.png" />
-  <img width="19%" alt="Kaleidoscope Preview" src="assets/010.png" />
+  <img width="19%" alt="Kaleidoscope Preview" src="assets/015.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/011.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/012.png" />
   <img width="19%" alt="Kaleidoscope Preview" src="assets/013.png" />
-  <img width="19%" alt="Kaleidoscope Preview" src="assets/014.png" />
-  <img width="19%" alt="Kaleidoscope Preview" src="assets/015.png" />
+  <img width="19%" alt="Kaleidoscope Preview" src="assets/04.png" />
+  <img width="19%" alt="Kaleidoscope Preview" src="assets/010.png" />
 
   
     
